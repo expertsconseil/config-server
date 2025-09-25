@@ -10,7 +10,15 @@ COPY . /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
 FROM openjdk:26-slim
-EXPOSE 8001
+
+# Installer curl pour le healthcheck
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+EXPOSE 8050
 COPY --from=build /home/app/target/*.jar app.jar
 ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
-
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8050/actuator/health || exit 1

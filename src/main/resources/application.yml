@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8050
 spring:
   application:
     name: config-server
@@ -10,4 +10,16 @@ spring:
           username: expertsconseil
           password: MaherFormation2025
           uri: https://github.com/expertsconseil/application-config.git
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+
+
 
